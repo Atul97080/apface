@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APface Pro - Advanced AI Face Transformation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .admin-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .subscription-banner {
+            background: linear-gradient(45deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .admin-banner {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .admin-panel {
+            display: none;
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .admin-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .stats-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .upload-section.active {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Advanced Controls */
+        .advanced-controls {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .ai-enhancement-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ai-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ai-option {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .ai-option:hover, .ai-option.active {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .filters-section {
+            margin-bottom: 30px;
+        }
+
+        .filter-categories {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            background: #f0f0f0;
+            color: #666;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-item {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid transparent;
+        }
+
+        .filter-item:nth-child(1) { background: linear-gradient(135deg, #ff6b6b, #ffa500); }
+        .filter-item:nth-child(2) { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .filter-item:nth-child(3) { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .filter-item:nth-child(4) { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .filter-item:nth-child(5) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+        .filter-item:nth-child(6) { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+        .filter-item:nth-child(7) { background: linear-gradient(135deg, #d299c2, #fef9d7); }
+        .filter-item:nth-child(8) { background: linear-gradient(135deg, #89f7fe, #66a6ff); }
+        .filter-item:nth-child(9) { background: linear-gradient(135deg, #fdbb2d, #22c1c3); }
+
+        .filter-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .filter-item.selected {
+            border: 3px solid #fff !important;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .filter-item.premium::after {
+            content: '👑';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+        }
+
+        .filter-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .batch-processing {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .batch-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .batch-progress {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 10px;
+        }
+
+        .batch-progress-bar {
+            background: #667eea;
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .transform-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .transform-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .transform-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .advanced-toggle {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .advanced-toggle.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .processing {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-item {
+            text-align: center;
+        }
+
+        .comparison-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .comparison-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .result-image {
+            width: 100%;
+            max-width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            display: block;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .quality-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .quality-btn {
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quality-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .share-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .new-photo-btn {
+            background: #ff6b6b;
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .premium-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .premium-modal {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .upgrade-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .admin-login {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .login-modal {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 300px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .close-btn {
+            width: 100%;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .subscription-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 -20px;
+            padding: 25px 20px;
+            color: white;
+        }
+
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .plan-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .plan-card:hover, .plan-card.selected {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-5px);
+        }
+
+        .plan-price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .plan-name {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .plan-features {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .subscribe-btn {
+            width: 100%;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .subscribe-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Animation effects */
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
+        }
+
+        .processing .spinner {
+            animation: spin 1s linear infinite, glow 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            .filters-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>APface Pro</h1>
+            <p>Advanced AI Face Transformation</p>
+            <button class="admin-toggle" id="adminToggle">👨‍💼 एडमिन</button>
+        </div>
+
+        <!-- Subscription/Admin Banner -->
+        <div class="subscription-banner" id="mainBanner">
+            🎨 अनलिमिटेड ट्रांसफॉर्मेशन के लिए सब्सक्राइब करें! 
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel" id="adminPanel">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <strong>🔧 एडमिन कंट्रोल पैनल</strong>
+            </div>
+            <div class="admin-controls">
+                <button class="admin-btn toggle-btn" id="toggleFreeMode">फ्री मोड: OFF</button>
+                <button class="admin-btn stats-btn" id="refreshStats">स्टेट्स रिफ्रेश</button>
+            </div>
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">1,247</div>
+                    <div class="stat-label">कुल यूजर्स</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayTransforms">89</div>
+                    <div class="stat-label">आज के ट्रांसफॉर्म</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="premiumUsers">156</div>
+                    <div class="stat-label">प्रीमियम यूजर्स</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📸</div>
+                <div class="upload-text">अपनी फोटो अपलोड करें</div>
+                <div class="upload-subtext">JPG, PNG, HEIC सपोर्टेड • Max 10MB</div>
+                <input type="file" class="file-input" id="fileInput" accept="image/*" multiple>
+            </div>
+
+            <!-- Batch Processing -->
+            <div class="batch-processing" id="batchProcessing">
+                <div style="font-size: 14px; font-weight: 600; margin-bottom: 10px;">
+                    📁 बैच प्रोसेसिंग (Multiple Photos)
+                </div>
+                <div class="batch-upload" id="batchUpload">
+                    <div>🖼️ एक साथ कई फोटो अपलोड करें</div>
+                    <div style="font-size: 11px; color: #666; margin-top: 5px;">Max 20 photos</div>
+                </div>
+                <div class="batch-progress">
+                    <div class="batch-progress-bar" id="batchProgressBar"></div>
+                </div>
+                <div id="batchStatus" style="font-size: 12px; color: #666;">रेडी</div>
+            </div>
+
+            <!-- Preview Container -->
+            <div class="preview-container" id="previewContainer">
+                <img class="preview-image" id="previewImage" alt="Preview">
+                <button class="action-btn new-photo-btn" id="newPhotoBtn">नई फोटो चुनें</button>
+            </div>
+
+            <!-- Advanced Controls -->
+            <div class="advanced-controls" id="advancedControls">
+                <div class="control-group">
+                    <label class="control-label">🎨 इंटेंसिटी (0-100%)</label>
+                    <input type="range" class="slider" id="intensitySlider" min="0" max="100" value="75">
+                    <div style="text-align: center; font-size: 12px; color: #666;">
+                        <span id="intensityValue">75%</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">✨ चमक/Brightness</label>
+                    <input type="range" class="slider" id="brightnessSlider" min="-50" max="50" value="0">
+                    <div style="text-align: center; font-size: 12px; color: #666;">
+                        <span id="brightnessValue">0</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">🌈 कंट्रास्ट</label>
+                    <input type="range" class="slider" id="contrastSlider" min="0" max="200" value="100">
+                    <div style="text-align: center; font-size: 12px; color: #666;">
+                        <span id="contrastValue">100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Enhancement Options -->
+            <div class="ai-enhancement-section">
+                <div style="font-size: 14px; font-weight: 600; margin-bottom: 5px;">
+                    🤖 AI एन्हांसमेंट ऑप्शन्स
+                </div>
+                <div class="ai-options">
+                    <div class="ai-option" data-enhancement="face-enhance">चेहरा सुधारें</div>
+                    <div class="ai-option" data-enhancement="skin-smooth">स्किन स्मूथ</div>
+                    <div class="ai-option" data-enhancement="eye-enhance">आंखें तेज़ करें</div>
+                    <div class="ai-option" data-enhancement="background-blur">बैकग्राउंड ब्लर</div>
+                    <div class="ai-option" data-enhancement="hair-enhance">बाल सुधारें</div>
+                    <div class="ai-option" data-enhancement="lighting-fix">लाइटिंग ठीक करें</div>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="section-title">🎨 AI फिल्टर चुनें</div>
+                
+                <!-- Advanced Toggle -->
+                <button class="advanced-toggle" id="advancedToggle">⚙️ एडवांस कंट्रोल्स</button>
+                
+                <!-- Filter Categories -->
+                <div class="filter-categories">
+                    <div class="category-tab active" data-category="all">सभी</div>
+                    <div class="category-tab" data-category="artistic">आर्टिस्टिक</div>
+                    <div class="category-tab" data-category="realistic">रियलिस्टिक</div>
+                    <div class="category-tab" data-category="fantasy">फैंटेसी</div>
+                </div>
+
+                <div class="filters-grid" id="filtersGrid">
+                    <!-- Basic Filters -->
+                    <div class="filter-item" data-filter="cartoon" data-category="artistic">
+                        <div class="filter-icon">🎭</div>
+                        <div>कार्टून</div>
+                    </div>
+                    <div class="filter-item" data-filter="sketch" data-category="artistic">
+                        <div class="filter-icon">✏️</div>
+                        <div>स्केच</div>
+                    </div>
+                    <div class="filter-item" data-filter="painting" data-category="artistic">
+                        <div class="filter-icon">🖼️</div>
+                        <div>पेंटिंग</div>
+                    </div>
+                    <div class="filter-item" data-filter="realistic" data-category="realistic">
+                        <div class="filter-icon">📷</div>
+                        <div>रियलिस्टिक</div>
+                    </div>
+                    
+                    <!-- Premium Filters -->
+                    <div class="filter-item premium" data-filter="anime" data-category="artistic">
+                        <div class="filter-icon">🌸</div>
+                        <div>एनीमे</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="vintage" data-category="artistic">
+                        <div class="filter-icon">📻</div>
+                        <div>विंटेज</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="cyberpunk" data-category="fantasy">
+                        <div class="filter-icon">🤖</div>
+                        <div>साइबरपंक</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="fantasy" data-category="fantasy">
+                        <div class="filter-icon">🧙</div>
+                        <div>फैंटेसी</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="3d" data-category="realistic">
+                        <div class="filter-icon">🎲</div>
+                        <div>3D आर्ट</div>
+                    </div>
+                    
+                    <!-- New Advanced Filters -->
+                    <div class="filter-item premium" data-filter="oil-painting" data-category="artistic">
+                        <div class="filter-icon">🎨</div>
+                        <div>ऑयल पेंटिंग</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="watercolor" data-category="artistic">
+                        <div class="filter-icon">💧</div>
+                        <div>वॉटरकलर</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="renaissance" data-category="artistic">
+                        <div class="filter-icon">🏛️</div>
+                        <div>रेनेसांस</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="neon" data-category="fantasy">
+                        <div class="filter-icon">💡</div>
+                        <div>नीयन</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="zombie" data-category="fantasy">
+                        <div class="filter-icon">🧟</div>
+                        <div>ज़ॉम्बी</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="robot" data-category="fantasy">
+                        <div class="filter-icon">🦾</div>
+                        <div>रोबोट</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="superhero" data-category="fantasy">
+                        <div class="filter-icon">🦸</div>
+                        <div>सुपरहीरो</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="alien" data-category="fantasy">
+                        <div class="filter-icon">👽</div>
+                        <div>एलियन</div>
+                    </div>
+                    <div class="filter-item premium" data-filter="professional" data-category="realistic">
+                        <div class="filter-icon">👔</div>
+                        <div>प्रोफेशनल</div>
+                    </div>
+                </div>
+
+                <button class="transform-btn" id="transformBtn" disabled>
+                    🪄 AI ट्रांसफॉर्मेशन शुरू करें
+                </button>
+            </div>
+
+            <!-- Processing Section -->
+            <div class="processing" id="processingSection">
+                <div class="spinner"></div>
+                <div id="processingText">AI आपकी फोटो को ट्रांसफॉर्म कर रहा है...</div>
+                <div style="font-size: 12px; color: #666; margin-top: 10px;" id="processingSubtext">कृपया प्रतीक्षा करें</div>
+            </div>
+
+            <!-- Result Section -->
+            <div class="result-section" id="resultSection">
+                <div class="section-title">✨ आपका ट्रांसफॉर्मेशन तैयार है!</div>
+                
+                <!-- Before/After Comparison -->
+                <div class="result-comparison" id="resultComparison">
+                    <div class="comparison-item">
+                        <div class="comparison-label">पहले</div>
+                        <img class="comparison-image" id="beforeImage" alt="Before">
+                    </div>
+                    <div class="comparison-item">
+                        <div class="comparison-label">बाद में</div>
+                        <img class="comparison-image" id="afterImage" alt="After">
+                    </div>
+                </div>
+
+                <img class="result-image" id="resultImage" alt="Transformed">
+                
+                <!-- Quality Selector -->
+                <div class="quality-selector">
+                    <button class="quality-btn" data-quality="standard">स्टैंडर्ड</button>
+                    <button class="quality-btn active" data-quality="hd">HD</button>
+                    <button class="quality-btn" data-quality="4k">4K Ultra</button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn download-btn" id="downloadBtn">⬇️ डाउनलोड</button>
+                    <button class="action-btn share-btn" id="shareBtn">📱 शेयर</button>
+                </div>
+                <button class="action-btn new-photo-btn" id="tryAgainBtn">🔄 फिर से ट्राई करें</button>
+            </div>
+        </div>
+
+        <!-- Subscription Section -->
+        <div class="subscription-section" id="subscriptionSection">
+            <div class="section-title" style="text-align: center; margin-bottom: 20px;">
+                💎 प्रीमियम प्लान चुनें
+            </div>
+            <div class="subscription-plans">
+                <div class="plan-card" data-plan="basic">
+                    <div class="plan-price">₹50</div>
+                    <div class="plan-name">ऑल पिक्चर्स</div>
+                    <div class="plan-features">
+                        • अनलिमिटेड बेसिक फिल्टर<br>
+                        • HD डाउनलोड<br>
+                        • सोशल शेयरिंग<br>
+                        • बैच प्रोसेसिंग (5 फोटो)
+                    </div>
+                    <button class="subscribe-btn" data-plan="basic">चुनें</button>
+                </div>
+                <div class="plan-card" data-plan="pro">
+                    <div class="plan-price">₹100</div>
+                    <div class="plan-name">प्रो</div>
+                    <div class="plan-features">
+                        • सभी प्रीमियम फिल्टर<br>
+                        • एड-फ्री एक्सपीरियंस<br>
+                        • 4K Ultra HD रिजल्ट्स<br>
+                        • बैच प्रोसेसिंग (20 फोटो)<br>
+                        • एडवांस कंट्रोल्स<br>
+                        • AI एन्हांसमेंट
+                    </div>
+                    <button class="subscribe-btn" data-plan="pro">चुनें</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Overlay -->
+        <div class="premium-overlay" id="premiumOverlay">
+            <div class="premium-modal">
+                <div class="modal-title">🔒 प्रीमियम फीचर</div>
+                <div class="modal-text">
+                    यह एडवांस फीचर प्रो सब्सक्रिप्शन के साथ उपलब्ध है। अभी अपग्रेड करें और सभी प्रो फीचर्स का आनंद लें!
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn upgrade-btn" id="upgradeBtn">अपग्रेड करें</button>
+                    <button class="modal-btn cancel-btn" id="cancelBtn">रद्द करें</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Login -->
+        <div class="admin-login" id="adminLogin">
+            <div class="login-modal">
+                <div class="modal-title">🔐 एडमिन लॉगिन</div>
+                <input type="password" class="login-input" id="adminPassword" placeholder="एडमिन पासवर्ड डालें">
+                <button class="login-btn" id="loginBtn">लॉगिन करें</button>
+                <button class="close-btn" id="closeLogin">रद्द करें</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let currentImage = null;
+        let selectedFilter = null;
+        let userSubscription = 'free'; // free, basic, pro
+        let isAdmin = false;
+        let adminFreeMode = false;
+        let selectedEnhancements = [];
+        let advancedMode = false;
+        let batchFiles = [];
+        
+        const premiumFilters = ['anime', 'vintage', 'cyberpunk', 'fantasy', '3d', 'oil-painting', 'watercolor', 'renaissance', 'neon', 'zombie', 'robot', 'superhero', 'alien', 'professional'];
+        const adminPassword = 'admin123';
+
+        // Advanced filter definitions
+        const advancedFilters = {
+            'cartoon': { name: 'कार्टून', category: 'artistic', algorithm: 'cartoon_v2' },
+            'sketch': { name: 'स्केच', category: 'artistic', algorithm: 'pencil_sketch' },
+            'painting': { name: 'पेंटिंग', category: 'artistic', algorithm: 'oil_painting' },
+            'realistic': { name: 'रियलिस्टिक', category: 'realistic', algorithm: 'photo_enhance' },
+            'anime': { name: 'एनीमे', category: 'artistic', algorithm: 'anime_v3' },
+            'vintage': { name: 'विंटेज', category: 'artistic', algorithm: 'vintage_film' },
+            'cyberpunk': { name: 'साइबरपंक', category: 'fantasy', algorithm: 'cyberpunk_2077' },
+            'fantasy': { name: 'फैंटेसी', category: 'fantasy', algorithm: 'magic_realm' },
+            '3d': { name: '3D आर्ट', category: 'realistic', algorithm: '3d_render' },
+            'oil-painting': { name: 'ऑयल पेंटिंग', category: 'artistic', algorithm: 'classical_oil' },
+            'watercolor': { name: 'वॉटरकलर', category: 'artistic', algorithm: 'watercolor_blend' },
+            'renaissance': { name: 'रेनेसांस', category: 'artistic', algorithm: 'renaissance_master' },
+            'neon': { name: 'नीयन', category: 'fantasy', algorithm: 'neon_glow' },
+            'zombie': { name: 'ज़ॉम्बी', category: 'fantasy', algorithm: 'undead_horror' },
+            'robot': { name: 'रोबोट', category: 'fantasy', algorithm: 'cyber_machine' },
+            'superhero': { name: 'सुपरहीरो', category: 'fantasy', algorithm: 'hero_transformation' },
+            'alien': { name: 'एलियन', category: 'fantasy', algorithm: 'extraterrestrial' },
+            'professional': { name: 'प्रोफेशनल', category: 'realistic', algorithm: 'corporate_enhance' }
+        };
+
+        // DOM Elements
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const transformBtn = document.getElementById('transformBtn');
+        const processingSection = document.getElementById('processingSection');
+        const resultSection = document.getElementById('resultSection');
+        const resultImage = document.getElementById('resultImage');
+        const premiumOverlay = document.getElementById('premiumOverlay');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminLogin = document.getElementById('adminLogin');
+        const mainBanner = document.getElementById('mainBanner');
+        const advancedControls = document.getElementById('advancedControls');
+        const batchProcessing = document.getElementById('batchProcessing');
+
+        // Admin functionality
+        document.getElementById('adminToggle').addEventListener('click', () => {
+            if (!isAdmin) {
+                adminLogin.style.display = 'flex';
+            } else {
+                isAdmin = false;
+                adminPanel.style.display = 'none';
+                updateBanner();
+                updateSubscriptionSection();
+            }
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const password = document.getElementById('adminPassword').value;
+            if (password === adminPassword) {
+                isAdmin = true;
+                adminLogin.style.display = 'none';
+                adminPanel.style.display = 'block';
+                updateBanner();
+                updateSubscriptionSection();
+                document.getElementById('adminPassword').value = '';
+                // Enable advanced features for admin
+                batchProcessing.style.display = 'block';
+            } else {
+                alert('❌ गलत पासवर्ड!');
+            }
+        });
+
+        document.getElementById('closeLogin').addEventListener('click', () => {
+            adminLogin.style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+        });
+
+        document.getElementById('toggleFreeMode').addEventListener('click', () => {
+            adminFreeMode = !adminFreeMode;
+            document.getElementById('toggleFreeMode').textContent = 
+                `फ्री मोड: ${adminFreeMode ? 'ON' : 'OFF'}`;
+            updateBanner();
+        });
+
+        document.getElementById('refreshStats').addEventListener('click', () => {
+            document.getElementById('totalUsers').textContent = Math.floor(Math.random() * 2000 + 1000);
+            document.getElementById('todayTransforms').textContent = Math.floor(Math.random() * 150 + 50);
+            document.getElementById('premiumUsers').textContent = Math.floor(Math.random() * 300 + 100);
+        });
+
+        // Advanced toggle
+        document.getElementById('advancedToggle').addEventListener('click', () => {
+            if (userSubscription === 'free' && !adminFreeMode) {
+                showPremiumModal();
+                return;
+            }
+            
+            advancedMode = !advancedMode;
+            if (advancedMode) {
+                advancedControls.style.display = 'block';
+                document.getElementById('advancedToggle').classList.add('active');
+                document.getElementById('advancedToggle').textContent = '⚙️ एडवांस कंट्रोल्स (ON)';
+            } else {
+                advancedControls.style.display = 'none';
+                document.getElementById('advancedToggle').classList.remove('active');
+                document.getElementById('advancedToggle').textContent = '⚙️ एडवांस कंट्रोल्स';
+            }
+        });
+
+        // Filter categories
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
+                
+                // Update active tab
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Filter items
+                document.querySelectorAll('.filter-item').forEach(item => {
+                    if (category === 'all' || item.dataset.category === category) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Upload functionality
+        uploadSection.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            
+            if (files.length > 1) {
+                // Batch processing
+                batchFiles = files;
+                handleBatchUpload();
+            } else if (files.length === 1) {
+                // Single file
+                const file = files[0];
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentImage = e.target.result;
+                    previewImage.src = currentImage;
+                    uploadSection.style.display = 'none';
+                    previewContainer.style.display = 'block';
+                    updateTransformButton();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Batch processing
+        function handleBatchUpload() {
+            if (userSubscription === 'free' && !adminFreeMode) {
+                showPremiumModal();
+                return;
+            }
+            
+            alert(`📁 ${batchFiles.length} फोटो अपलोड की गई। बैच प्रोसेसिंग शुरू करने के लिए फिल्टर चुनें।`);
+            uploadSection.style.display = 'none';
+            batchProcessing.style.display = 'block';
+            
+            // Show first image as preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                previewImage.src = currentImage;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(batchFiles[0]);
+        }
+
+        // AI Enhancement options
+        document.querySelectorAll('.ai-option').forEach(option => {
+            option.addEventListener('click', () => {
+                if (userSubscription === 'free' && !adminFreeMode) {
+                    showPremiumModal();
+                    return;
+                }
+                
+                const enhancement = option.dataset.enhancement;
+                if (selectedEnhancements.includes(enhancement)) {
+                    selectedEnhancements = selectedEnhancements.filter(e => e !== enhancement);
+                    option.classList.remove('active');
+                } else {
+                    selectedEnhancements.push(enhancement);
+                    option.classList.add('active');
+                }
+            });
+        });
+
+        // Advanced sliders
+        const intensitySlider = document.getElementById('intensitySlider');
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const contrastSlider = document.getElementById('contrastSlider');
+
+        intensitySlider.addEventListener('input', (e) => {
+            document.getElementById('intensityValue').textContent = e.target.value + '%';
+        });
+
+        brightnessSlider.addEventListener('input', (e) => {
+            document.getElementById('brightnessValue').textContent = e.target.value;
+        });
+
+        contrastSlider.addEventListener('input', (e) => {
+            document.getElementById('contrastValue').textContent = e.target.value + '%';
+        });
+
+        // Quality selector
+        document.querySelectorAll('.quality-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (btn.dataset.quality === '4k' && userSubscription !== 'pro' && !adminFreeMode) {
+                    showPremiumModal();
+                    return;
+                }
+                
+                document.querySelectorAll('.quality-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Filter selection
+        document.querySelectorAll('.filter-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const filterType = item.dataset.filter;
+                
+                // Check premium access
+                if (premiumFilters.includes(filterType) && userSubscription === 'free' && !adminFreeMode) {
+                    showPremiumModal();
+                    return;
+                }
+
+                // Remove previous selection
+                document.querySelectorAll('.filter-item').forEach(f => {
+                    f.classList.remove('selected');
+                });
+
+                // Select current filter
+                item.classList.add('selected');
+                selectedFilter = filterType;
+                updateTransformButton();
+            });
+        });
+
+        // Transform button
+        transformBtn.addEventListener('click', () => {
+            if (currentImage && selectedFilter) {
+                if (batchFiles.length > 1) {
+                    startBatchProcessing();
+                } else {
+                    startTransformation();
+                }
+            }
+        });
+
+        function startBatchProcessing() {
+            processingSection.style.display = 'block';
+            previewContainer.style.display = 'none';
+            document.querySelector('.filters-section').style.display = 'none';
+            
+            const progressBar = document.getElementById('batchProgressBar');
+            const statusText = document.getElementById('batchStatus');
+            
+            let completed = 0;
+            const total = batchFiles.length;
+            
+            function processBatch() {
+                if (completed < total) {
+                    const progress = (completed / total) * 100;
+                    progressBar.style.width = progress + '%';
+                    statusText.textContent = `प्रोसेसिंग... ${completed + 1}/${total}`;
+                    
+                    setTimeout(() => {
+                        completed++;
+                        processBatch();
+                    }, 1000);
+                } else {
+                    progressBar.style.width = '100%';
+                    statusText.textContent = 'पूर्ण!';
+                    setTimeout(() => {
+                        completeTransformation();
+                        alert(`🎉 ${total} फोटो सफलतापूर्वक ट्रांसफॉर्म की गई!`);
+                    }, 500);
+                }
+            }
+            
+            processBatch();
+        }
+
+        function startTransformation() {
+            previewContainer.style.display = 'none';
+            document.querySelector('.filters-section').style.display = 'none';
+            processingSection.style.display = 'block';
+            
+            // Advanced processing messages
+            const messages = [
+                'AI न्यूरल नेटवर्क लोड हो रहा है...',
+                'फेस डिटेक्शन चल रहा है...',
+                'एडवांस ट्रांसफॉर्मेशन अप्लाई हो रहा है...',
+                'HD क्वालिटी ऑप्टिमाइज़ेशन...',
+                'फाइनल टच-अप्स...'
+            ];
+            
+            let messageIndex = 0;
+            const messageInterval = setInterval(() => {
+                if (messageIndex < messages.length) {
+                    document.getElementById('processingText').textContent = messages[messageIndex];
+                    messageIndex++;
+                } else {
+                    clearInterval(messageInterval);
+                }
+            }, 800);
+
+            setTimeout(() => {
+                clearInterval(messageInterval);
+                completeTransformation();
+            }, 4000);
+        }
+
+        function completeTransformation() {
+            processingSection.style.display = 'none';
+            generateAdvancedTransformation();
+            
+            // Show before/after comparison
+            document.getElementById('beforeImage').src = currentImage;
+            document.getElementById('afterImage').src = resultImage.src;
+            
+            resultSection.style.display = 'block';
+        }
+
+        function generateAdvancedTransformation() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = () => {
+                canvas.width = 400;
+                canvas.height = 400;
+                
+                // Draw original with high quality
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, 400, 400);
+                
+                // Apply advanced transformations
+                applyAdvancedAIFilter(ctx, canvas, selectedFilter);
+                
+                // Apply AI enhancements
+                if (selectedEnhancements.length > 0) {
+                    applyAIEnhancements(ctx, canvas);
+                }
+                
+                // Apply manual adjustments
+                if (advancedMode) {
+                    applyManualAdjustments(ctx, canvas);
+                }
+                
+                resultImage.src = canvas.toDataURL('image/png', 1.0);
+            };
+            
+            img.src = currentImage;
+        }
+
+        function applyAdvancedAIFilter(ctx, canvas, filter) {
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const intensity = parseInt(document.getElementById('intensitySlider').value) / 100;
+            
+            switch(filter) {
+                case 'cartoon':
+                    applyCartoonEffect(data, intensity);
+                    break;
+                case 'sketch':
+                    applySketchEffect(data, intensity);
+                    break;
+                case 'painting':
+                    applyPaintingEffect(data, intensity);
+                    break;
+                case 'anime':
+                    applyAnimeEffect(data, intensity);
+                    break;
+                case 'vintage':
+                    applyVintageEffect(data, intensity);
+                    break;
+                case 'cyberpunk':
+                    applyCyberpunkEffect(data, intensity);
+                    break;
+                case 'fantasy':
+                    applyFantasyEffect(data, intensity);
+                    break;
+                case '3d':
+                    apply3DEffect(data, intensity);
+                    break;
+                case 'oil-painting':
+                    applyOilPaintingEffect(data, intensity);
+                    break;
+                case 'watercolor':
+                    applyWatercolorEffect(data, intensity);
+                    break;
+                case 'renaissance':
+                    applyRenaissanceEffect(data, intensity);
+                    break;
+                case 'neon':
+                    applyNeonEffect(data, intensity);
+                    break;
+                case 'zombie':
+                    applyZombieEffect(data, intensity);
+                    break;
+                case 'robot':
+                    applyRobotEffect(data, intensity);
+                    break;
+                case 'superhero':
+                    applySuperheroEffect(data, intensity);
+                    break;
+                case 'alien':
+                    applyAlienEffect(data, intensity);
+                    break;
+                case 'professional':
+                    applyProfessionalEffect(data, intensity);
+                    break;
+                default:
+                    applyRealisticEffect(data, intensity);
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // Advanced filter effects
+        function applyCartoonEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Quantize colors for cartoon effect
+                r = Math.round(r / 64) * 64;
+                g = Math.round(g / 64) * 64;
+                b = Math.round(b / 64) * 64;
+                
+                // Apply intensity
+                data[i] = lerp(data[i], Math.min(255, r * 1.3), intensity);
+                data[i + 1] = lerp(data[i + 1], Math.min(255, g * 1.3), intensity);
+                data[i + 2] = lerp(data[i + 2], Math.min(255, b * 1.3), intensity);
+            }
+        }
+
+        function applyAnimeEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Anime-style color enhancement
+                r = Math.min(255, r * 1.4 + 40);
+                g = Math.min(255, g * 1.2 + 20);
+                b = Math.min(255, b * 1.6 + 50);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyOilPaintingEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Oil painting warm tones
+                r = Math.min(255, r * 1.3 + 30);
+                g = Math.min(255, g * 1.1 + 15);
+                b = Math.min(255, b * 0.8);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyRenaissanceEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Renaissance classical tones
+                r = Math.min(255, r * 1.1 + 25);
+                g = Math.min(255, g * 0.95 + 15);
+                b = Math.min(255, b * 0.85 + 10);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyNeonEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Neon glow effect
+                r = Math.min(255, r * 0.7 + 100);
+                g = Math.min(255, g * 1.5 + 80);
+                b = Math.min(255, b * 1.8 + 120);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyZombieEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Zombie pale/green effect
+                r = Math.min(255, r * 0.8 + 20);
+                g = Math.min(255, g * 1.3 + 40);
+                b = Math.min(255, b * 0.6 + 10);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyRobotEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Metallic robot effect
+                const avg = (r + g + b) / 3;
+                r = Math.min(255, avg * 0.9 + 60);
+                g = Math.min(255, avg * 0.9 + 60);
+                b = Math.min(255, avg * 1.2 + 80);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applySuperheroEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Superhero dramatic effect
+                r = Math.min(255, r * 1.4 + 30);
+                g = Math.min(255, g * 1.1 + 20);
+                b = Math.min(255, b * 1.3 + 40);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyAlienEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Alien green/blue effect
+                r = Math.min(255, r * 0.6 + 40);
+                g = Math.min(255, g * 1.4 + 60);
+                b = Math.min(255, b * 1.2 + 50);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyProfessionalEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                // Professional portrait enhancement
+                r = Math.min(255, r * 1.05 + 8);
+                g = Math.min(255, g * 1.05 + 8);
+                b = Math.min(255, b * 1.05 + 8);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applySketchEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
+                const enhanced = gray > 150 ? 255 : gray > 100 ? gray * 1.8 : gray * 0.5;
+                
+                data[i] = lerp(data[i], enhanced, intensity);
+                data[i + 1] = lerp(data[i + 1], enhanced, intensity);
+                data[i + 2] = lerp(data[i + 2], enhanced, intensity);
+            }
+        }
+
+        function applyPaintingEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                r = Math.min(255, r * 1.3 + 30);
+                g = Math.min(255, g * 1.1 + 20);
+                b = Math.min(255, b * 0.8 + 10);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyVintageEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                const sepiaR = Math.min(255, (r * 0.393) + (g * 0.769) + (b * 0.189) + 30);
+                const sepiaG = Math.min(255, (r * 0.349) + (g * 0.686) + (b * 0.168) + 20);
+                const sepiaB = Math.min(255, (r * 0.272) + (g * 0.534) + (b * 0.131) + 10);
+                
+                data[i] = lerp(data[i], sepiaR, intensity);
+                data[i + 1] = lerp(data[i + 1], sepiaG, intensity);
+                data[i + 2] = lerp(data[i + 2], sepiaB, intensity);
+            }
+        }
+
+        function applyCyberpunkEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                r = Math.min(255, r * 0.6 + 80);
+                g = Math.min(255, g * 1.4 + 60);
+                b = Math.min(255, b * 1.8 + 100);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function applyFantasyEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                r = Math.min(255, r * 1.5 + 50);
+                g = Math.min(255, g * 0.8 + 30);
+                b = Math.min(255, b * 1.6 + 70);
+                
+                data[i] = lerp(data[i], r, intensity);
+                data[i + 1] = lerp(data[i + 1], g, intensity);
+                data[i + 2] = lerp(data[i + 2], b, intensity);
+            }
+        }
+
+        function apply3DEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                let r = data[i], g = data[i + 1], b = data[i + 2];
+                
+                r = r > 128 ? Math.min(255, r * 1.4) : Math.max(0, r * 0.7);
+                g = g > 128 ? Math.min(255, g * 1.4) : Math.max(0, g * 0.7);
+                b = b > 128 ? Math.min(255, b * 1.4) : Math.max(0, b * 0.7);
+                
+                data[i] = lerp(data[i], r + 20, intensity);
+                data[i + 1] = lerp(data[i + 1], g + 20, intensity);
+                data[i + 2] = lerp(data[i + 2], b + 20, intensity);
+            }
+        }
+
+        function applyRealisticEffect(data, intensity) {
+            for (let i = 0; i < data.length; i += 4) {
+                data[i] = lerp(data[i], Math.min(255, data[i] * 1.15 + 10), intensity);
+                data[i + 1] = lerp(data[i + 1], Math.min(255, data[i + 1] * 1.15 + 10), intensity);
+                data[i + 2] = lerp(data[i + 2], Math.min(255, data[i + 2] * 1.15 + 10), intensity);
+            }
+        }
+
+        function applyAIEnhancements(ctx, canvas) {
+            if (selectedEnhancements.includes('face-enhance')) {
+                // Face enhancement simulation
+                ctx.globalCompositeOperation = 'overlay';
+                ctx.fillStyle = 'rgba(255, 220, 177, 0.1)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            if (selectedEnhancements.includes('skin-smooth')) {
+                // Skin smoothing simulation
+                ctx.filter = 'blur(0.5px)';
+                ctx.drawImage(canvas, 0, 0);
+                ctx.filter = 'none';
+            }
+        }
+
+        function applyManualAdjustments(ctx, canvas) {
+            const brightness = parseInt(document.getElementById('brightnessSlider').value);
+            const contrast = parseInt(document.getElementById('contrastSlider').value);
+            
+            if (brightness !== 0 || contrast !== 100) {
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                const brightnessFactor = brightness;
+                const contrastFactor = contrast / 100;
+                
+                for (let i = 0; i < data.length; i += 4) {
+                    // Apply brightness
+                    data[i] = Math.max(0, Math.min(255, data[i] + brightnessFactor));
+                    data[i + 1] = Math.max(0, Math.min(255, data[i + 1] + brightnessFactor));
+                    data[i + 2] = Math.max(0, Math.min(255, data[i + 2] + brightnessFactor));
+                    
+                    // Apply contrast
+                    data[i] = Math.max(0, Math.min(255, ((data[i] - 128) * contrastFactor) + 128));
+                    data[i + 1] = Math.max(0, Math.min(255, ((data[i + 1] - 128) * contrastFactor) + 128));
+                    data[i + 2] = Math.max(0, Math.min(255, ((data[i + 2] - 128) * contrastFactor) + 128));
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+            }
+        }
+
+        function lerp(start, end, factor) {
+            return start + (end - start) * factor;
+        }
+
+        function updateBanner() {
+            if (isAdmin && adminFreeMode) {
+                mainBanner.className = 'admin-banner';
+                mainBanner.innerHTML = '🔓 एडमिन मोड: सभी प्रो फीचर्स फ्री एक्टिव!';
+            } else if (isAdmin) {
+                mainBanner.className = 'admin-banner';
+                mainBanner.innerHTML = '👨‍💼 एडमिन लॉग्ड इन - कंट्रोल पैनल एक्टिव';
+            } else {
+                mainBanner.className = 'subscription-banner';
+                mainBanner.innerHTML = '🎨 एडवांस AI फीचर्स के लिए प्रो सब्सक्राइब करें!';
+            }
+        }
+
+        function updateSubscriptionSection() {
+            const subscriptionSection = document.getElementById('subscriptionSection');
+            if (isAdmin && adminFreeMode) {
+                subscriptionSection.style.display = 'none';
+            } else {
+                subscriptionSection.style.display = 'block';
+            }
+        }
+
+        function resetApp() {
+            uploadSection.style.display = 'block';
+            previewContainer.style.display = 'none';
+            document.querySelector('.filters-section').style.display = 'block';
+            processingSection.style.display = 'none';
+            resultSection.style.display = 'none';
+            batchProcessing.style.display = 'none';
+            advancedControls.style.display = 'none';
+            
+            currentImage = null;
+            selectedFilter = null;
+            selectedEnhancements = [];
+            batchFiles = [];
+            advancedMode = false;
+            
+            document.querySelectorAll('.filter-item').forEach(f => f.classList.remove('selected'));
+            document.querySelectorAll('.ai-option').forEach(opt => opt.classList.remove('active'));
+            document.getElementById('advancedToggle').classList.remove('active');
+            document.getElementById('advancedToggle').textContent = '⚙️ एडवांस कंट्रोल्स';
+            
+            updateTransformButton();
+        }
+
+        function updateTransformButton() {
+            if (currentImage && selectedFilter) {
+                transformBtn.disabled = false;
+                transformBtn.style.opacity = '1';
+                if (batchFiles.length > 1) {
+                    transformBtn.textContent = `🪄 ${batchFiles.length} फोटो ट्रांसफॉर्म करें`;
+                } else {
+                    transformBtn.textContent = '🪄 AI ट्रांसफॉर्मेशन शुरू करें';
+                }
+            } else {
+                transformBtn.disabled = true;
+                transformBtn.style.opacity = '0.6';
+            }
+        }
+
+        function showPremiumModal() {
+            premiumOverlay.style.display = 'flex';
+        }
+
+        function hidePremiumModal() {
+            premiumOverlay.style.display = 'none';
+        }
+
+        function scrollToSubscription() {
+            document.querySelector('.subscription-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function subscribeToPlan(plan) {
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            document.querySelector(`[data-plan="${plan}"]`).classList.add('selected');
+            userSubscription = plan;
+            
+            setTimeout(() => {
+                alert(`🎉 ${plan === 'basic' ? 'ऑल पिक्चर्स' : 'प्रो'} सब्सक्रिप्शन एक्टिवेट हो गया!`);
+                updateUIForSubscription();
+                
+                // Enable advanced features for pro users
+                if (plan === 'pro') {
+                    batchProcessing.style.display = 'block';
+                }
+            }, 500);
+        }
+
+        function updateUIForSubscription() {
+            if (userSubscription !== 'free') {
+                mainBanner.innerHTML = 
+                    `✅ ${userSubscription === 'basic' ? 'ऑल पिक्चर्स' : 'प्रो'} सब्सक्रिप्शन एक्टिव`;
+                mainBanner.style.background = 
+                    'linear-gradient(45deg, #4CAF50, #45a049)';
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('newPhotoBtn').addEventListener('click', resetApp);
+        document.getElementById('tryAgainBtn').addEventListener('click', resetApp);
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (userSubscription === 'free' && !adminFreeMode) {
+                showPremiumModal();
+                return;
+            }
+            
+            const activeQuality = document.querySelector('.quality-btn.active').dataset.quality;
+            const link = document.createElement('a');
+            link.download = `APface_${selectedFilter}_${activeQuality}.png`;
+            link.href = resultImage.src;
+            link.click();
+            alert(`🎉 ${activeQuality.toUpperCase()} क्वालिटी में डाउनलोड हो गई!`);
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            if (navigator.share && navigator.canShare) {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], 'apface_transformation.png', { type: 'image/png' });
+                    navigator.share({
+                        title: 'APface AI Transformation',
+                        text: 'मेरी AI ट्रांसफॉर्म की गई फोटो देखें!',
+                        files: [file]
+                    });
+                });
+            } else {
+                alert('📱 सोशल मीडिया पर शेयर किया गया!');
+            }
+        });
+
+        document.querySelectorAll('.subscribe-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const plan = e.target.dataset.plan;
+                subscribeToPlan(plan);
+            });
+        });
+
+        document.getElementById('upgradeBtn').addEventListener('click', () => {
+            hidePremiumModal();
+            scrollToSubscription();
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', hidePremiumModal);
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            updateTransformButton();
+            updateBanner();
+            
+            // Show batch processing for pro users
+            if (userSubscription === 'pro' || isAdmin) {
+                batchProcessing.style.display = 'block';
+            }
+        });
+
+        // Drag and drop functionality
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('active');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('active');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('active');
+            
+            const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+            
+            if (files.length > 1) {
+                batchFiles = files;
+                handleBatchUpload();
+            } else if (files.length === 1) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    currentImage = e.target.result;
+                    previewImage.src = currentImage;
+                    uploadSection.style.display = 'none';
+                    previewContainer.style.display = 'block';
+                    updateTransformButton();
+                };
+                reader.readAsDataURL(files[0]);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                document.getElementById('adminToggle').click();
+            }
+            if (e.key === 'Enter' && !transformBtn.disabled) {
+                transformBtn.click();
+            }
+        });
+
+        // Auto-save settings
+        setInterval(() => {
+            if (isAdmin) {
+                // Auto-refresh stats every 30 seconds
+                document.getElementById('refreshStats').click();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
